@@ -1,0 +1,128 @@
+Cours OpenClassrooms : Des applications ultra-rapides avec Node.js
+// que fait donc ce code ??
+
+var http = require('http');
+var server = http.createServer(function(req, res) {
+  res.writeHead(200);
+  res.end('<p><h1><strong>Salut tout le monde !</strong></h1></p>');
+});
+server.listen(8080);
+
+
+// Il crée un mini-serveur web qui renvoie un message "Salut tout le monde" dans tous les cas,
+// quelle que soit la page demandée. Ce serveur est lancé sur le port 8080 à la dernière ligne.
+// Disséquons du code
+// Décomposons le code :
+// var http = require('http');   require effectue un appel à la bibliothèque.
+// Ici, la bibliothèque 'http' qui nous permet de créer un serveur web.
+// Il existe des tonnes de bibliothèque comme celle-là, la plupart pouvant être
+// téléchargées avec NPM, le gestionnaire de paquets de Node.js (on apprendra à
+// l'utiliser plus tard).
+// La variable http représente un objet JavaScript qui va nous permettre de lancer
+// un serveur web. C'est justement ce qu'on fait avec : var server = http.createServer();
+
+// On appelle la fonction createServer() contenue dans l'objet http et on enregistre ce
+// serveur dans la variable server.
+// Vous remarquerez que la fonction createServer prend un paramètre...
+// et que ce paramètre est une fonction ! C'est pour ça que l'instruction
+
+// est un peu compliquée, puisqu'elle s'étend sur plusieurs lignes :
+
+      // var server = http.createServer(function(req, res) {
+      // res.writeHead(200);
+      // res.end('Salut tout le monde !');
+      // });
+
+//  Tout le code ci-dessus correspond
+// à l'appel à createServer(). Il comprend en paramètre la fonction
+// à exécuter quand un visiteur se connecte à notre site.
+
+// Retourner du code HTML
+// Mais l'application est pour l'instant minimaliste :
+// Le message renvoyé est du texte brut, il ne comporte même pas de HTML !
+// L'application renvoie toujours le même message, quelle que soit la page appelée
+// (http://localhost:8080, http://localhost:8080/mapage, http://localhost:8080/dossier/autrepage)
+// Pour que ce chapitre soit complet, nous allons voir comment remédier à ces deux problèmes.
+// Commençons ici par voir comment faire pour renvoyer du HTML.
+
+// Comme je vous l'ai dit, il y a des règles à respecter entre le client et le serveur.
+// Ils communiquent en se basant sur la norme HTTP inventée par Tim Berners-lee.
+// Cette norme est à la base du Web(tout comme le langage HTML qui a aussi été inventé
+// par le même monsieur)
+
+// Que dit la norme HTTP ? Que le serveur doit indiquer le type de données qu'il s'apprète
+// à envoyer au client. Eh oui ! un serveur peut renvoyer différents types de données.
+//
+// - Du texte brut : text/plain
+// - Du HTML : text/html
+// - Du CSS : text/css
+// - Une image JPEG : image/jpeg
+// - Une vidéo MPEG4 : video/mp4
+// - Un fichier ZIP : application/zip
+// - etc...
+
+// Ce sont ce qu'on appelle les types MIME. Ils sont envoyés dans l'en-tête de la réponse du serveur.
+// Vous vous souvenez comment on écrit dans l'en-tête de la réponse avec Node.js ?
+// Nous avions écrit ceci :
+            //   res.writeHead(200);
+
+// Nous avions seulement indiqué le code de réponse 200 qui signifie "OK, pas d'erreur".
+// Nous devons rajouter un paramètre qui indique le type MIME de la réponse.
+// Pour HTML, ce sera donc :
+            //   res.writeHead(200, {"Content-Type": "text/html"});
+
+// Le second paramètre est entre accolades car on peut y envoyer plusieurs valeurs
+// sous forme de tableau.
+// Maintenant que c'est fait, nous pouvons renvoyer du HTML dans la réponse !
+            //   res.end('<p>Voici un paragraphe <strong>HTML</strong> !</p>');
+
+// Au final, notre code ressemble donc à ceci :
+            // var http = require('http');
+            //
+            // var server = http.createServer(function(req, res) {
+            // res.writeHead(200, {"Content-Type": "text/html"});
+            // res.end('<p>Voici un paragraphe <strong>HTML</strong> !</p>');
+            // });
+            // server.listen(8080);
+
+// Un paragraphe HTML renvoyé par notre application Node.js
+
+
+
+Waaah !! Mais c'est atroce d'écrire du HTML comme ça ! (openclassrooms)
+Node.js est bas niveau.
+Je vous rassure, aucun développeur ne s'amusera vraiment à faire des pages web html
+complexes comme ça là-dedans...
+Il existe des moyens pour séparer le code HTML du code JavaScript :
+  - ce sont les systèmes de Templates. C'est un peu hors sujet pour le moment,
+  étant donné qu'on commence tout juste à découvrir les bases de Node.js. Mais si le
+  sujet vous intéresse, sachez qu'il existe des tonnes de modules Node.js dédiés aux Templates.
+  Le choix est immense !
+
+DETERMINER LA PAGE APPELÉE ET LES PARAMÈTRES :
+
+Nous savons renvoyer du code HTML, mais pour le moment notre application... renvoie toujours
+la même chose ! Comment fait-on pour créer différentes pages avec Node.js ?
+http://localhost:8080
+http://localhost:8080/mapage
+http://localhost:8080/dossier/autrepage...
+Essayez notre petite application sur différents URLs. Quelle que soit la page appelée....
+....la page affiche toujours la même chose.
+
+Il faut que l'on sache quelle est la page demandé par l'utilisateur. Pour l'instant, vu
+qu'on ne fait aucun test, notre application renvoie toujours la même chose.
+
+Nous allons découvrir comment récupérer :
+    - Le nom de la page demandée(/mapage,/page.html,/dossier/autrepage...)
+    - Les paramètres qui circulent dans l'URL 
+    (ex: http://localhost:8080/mapage? nom=dupont&prenom=robert).
+
+
+
+
+
+// ci-dessous code pour infos :
+// <p class="alert alert-success">Bandeau d’alerte - la classe success</p>
+// <p class="alert alert-info">Bandeau d’alerte - la classe info</p>
+// <p class="alert alert-warning">Bandeau d’alerte - la classe warning</p>
+// <p class="alert alert-danger">Bandeau d’alerte - la classe danger</p>
