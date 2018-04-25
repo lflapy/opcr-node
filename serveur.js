@@ -2,19 +2,19 @@ var http = require('http');
 
 var server = http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
-    res.write('<!DOCTYPE html>'+
-'<html>'+
-'    <head>'+
-'        <meta charset="utf-8" />'+
-'        <title>Ma page Node.js !</title>'+
-'    </head>'+
-'    <body>'+
-'     	<p>Voici un paragraphe <strong>HTML</strong> !</p>'+
-'     	<p>pas vraiment extra le <strong>HTML...</strong> !</p>'+
-'    </body>'+
-'</html>');
-    res.end();
-});
+//     res.write('<!DOCTYPE html>'+
+// '<html>'+
+// '    <head>'+
+// '        <meta charset="utf-8" />'+
+// '        <title>Ma page Node.js !</title>'+
+// '    </head>'+
+// '    <body>'+
+// '     	<p>Voici un paragraphe <strong>HTML</strong> !</p>'+
+// '     	<p>pas vraiment extra le <strong>HTML...</strong> !</p>'+
+// '    </body>'+
+// '</html>');
+     res.end();
+ });
 server.listen(8080);
 
 // conclusion : c'est pas extra l'écriture du html....
