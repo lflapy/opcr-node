@@ -1,0 +1,95 @@
+Créez un fichierpackage.jsondans le même dossier que votre application.
+Commençons simplement avec ce code :
+
+                              {
+                              "name": "mon-app",
+                              "version": "0.1.0",
+                              "dependencies": {
+                              "markdown": "~0.4"
+                              }
+                              }
+
+Ce fichier JSON contient 3 paires de clé-valeur :
+
+  - name : c'est le nom de votre application. Restez simple, évitez les espaces et accents.
+
+  - version : c'est le numéro de version de votre application. Il est composé d'un numéro de version majeure,
+              de version mineure et de patch.
+
+  - dependencies : c'est un tableau listant les noms des modules dont a besoin votre application pour fonctionner
+              ainsi que les versions compatibles.
+
+Infos :
+    Le fichier peut-être beaucoup plus complet que ça, je ne vous ai montré ici que les valeurs essentielles.
+    Pour tout connaître sur le fonctionnement de ce fichier package.json, je vous recommande cette cheat sheet :
+    package.json.nodejitsu.com
+
+LE FONCTIONNEMENT DES NUMÉROS DE VERSION
+Pour bien gérer les dépendances et savoir mettre à jour le numéro version de son application, il faut savoir comment
+fonctionnent les numéros de version avec Node.js.
+Il y a pour chaque application :
+        - Un numéro de version majeur. En général on commence à 0 tant que l'application
+          n'est pas considérée comme mature. Ce numéro change très rarement, uniquement quand
+          l'application a subi des changements très profonds.
+
+        - Un numéro de version mineur. Ce numéro est changé à chaque fois que l'application est un peu modifiée.
+
+        - Un numéro de patch. Ce numéro est changé à chaque petite correction de bug ou de faille.
+
+
+
+Les fonctionnalités de l'application restent les mêmes entre les patchs, il s'agit surtout
+d'optimisations et de corrections indispensable.
+
+Ici j'ai donc choisi de commencer à numéroter mon application à la version 0.1.0
+(on aurait aussi pu commencer à 1.0.0 mais ç'aurait été prétentieux ;) ).
+
+Si je corrige un bug, l'application passera à la version 0.1.1 et il me faudra mettre à jour ce numéro dans le
+fichier packages.json.
+Si j'améliore significativement mon application, elle passera à la version 0.2.0, puis 0.3.0 et ainsi de suite.
+Le jour où je considère qu'elle a atteint un jalon important, et qu'elle est mature, je pourrai la passer en version 1.0.0.
+
+
+LA GESTION DES VERSION DES DÉPENDANCES :
+
+C'est à vous d'indiquer avec quelles versions de ses dépendances votre application fonctionne. `
+Si votre application dépend du module markdown v0.3.5 très précisément, vous écrirez :
+
+                      "dependencies": {
+                          "markdown": "0.3.5" // Version 0.3.5 uniquement
+                          }
+
+Si vous faites un npm update pour mettre à jour les modules externes, markdown ne sera jamais mis à jour
+(même si l'application passe en version 0.3.6). Vous pouvez mettre un tilde devant le numéro de version pour
+autoriser les mises à jour jusqu'à la prochaine version mineure :
+
+                        "dependencies": {
+                            "markdown": "~0.3" // OK pour les versions 0.3.X, 0.4.X, 0.5.X
+                                                  jusqu'à la version 1.0.0 non incluse
+                          }
+Attention néanmoins : entre deux versions minueures, un module peut changer suffisamment et votre application
+pourrait être incompatible. Je recommande d'accepter uniquement les mises à jour de patch, c'est plus sûr.
+
+PUBLIER UN MODULE :
+
+Avec Node.js, vous pouvez créer une application pour vos besoins, mais vous pouvez aussi créer des modules qui offrent
+des fonctionnalités. Si vous pensez que votre module pourrait servir à d'autres personnes, n'hésitez pas à le partager !
+Vous pouvez très facilement le publier sur NPM pour que d'autres personnes puissent l'installer à leur tour.
+Info: JE RAPPELLE QU'UN MODULE N'EST RIEN D'AUTRE QU'UNE APPLICATION NODE.JS QUI CONTIENT DES INSTRUCTIONS exports
+
+                          POUR PARTAGER DES FONCTIONNALITÉS.
+Vous voulez accéder à la gloire éternelle et voir votre module téléchargé des milliers de fois sur NPM ?
+Rien de plus simple....
+
+          npm adduser
+
+Une fois que c'est fait, placez-vous dans le répertoire de votre projet à publier.
+Vérifiez que vous avez :
+
+          - Un fichier package.json qui décrit votre module (au moins son nom, sa version et ses dépendances)
+          - Un fichier README.md (en markdown) qui représente votre module de façon un peu détaillée.
+            N'hésitez pas à y inclure un mini-tutoriel expliquant comment utiliser votre module !
+
+Il ne vous reste plus qu'à faire :
+
+          npm publish

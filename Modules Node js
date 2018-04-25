@@ -1,0 +1,148 @@
+
+LES MODULES NODE.JS ET NPM
+
+Croyez-le ou non, le noyau de Node.js est tout petit. De base, Node.js ne sait en fait pas faire grand chose.
+
+Pourtant, Node.js est très riche grâce à son extensibilité. Ces extensions de Node.js sont appelées modules.
+
+Il existe des milliers de modules qui offrent des fonctionnalités variées : de la gestion des fichiers uploadés
+à la connexion aux bases de données MySQL ou à Redis, en passant par des frameworks, des systèmes de templates
+et la gestion de la communication temps réel avec le visiteur ! Il y a à peu près tout ce dont on peut rêver et
+de nouveaux modules apparaissent chaque jour.
+
+Nous allons commencer par voir comment sont gérés les modules par Node.js et nous verrons que nous pouvons
+facilement en créer un nous aussi. Puis, nous découvrirons NPM (Node Package Manager), l'outil indispensable
+qui vous permet de télécharger facilement tous les modules de la communauté Node.js ! Enfin, je vous montrerai
+comment accéder à la gloire éternelle en publiant votre module sur NPM. :soleil:
+
+Créer des modules
+Vous souvenez-vous de cette ligne ?
+
+var http = require('http');
+Elle était tout au début de notre premier code. Je vous avais dit que c'était
+un appel à la bibliothèque "http" de Node.js (ou devrais-je dire au module "http").
+
+Quand on fait ça, Node.js va chercher sur notre disque un fichier appeléhttp.js.
+De même, si on demande le module "url", Node.js va rechercher un fichier appelé url.js.
+
+var http = require('http'); // Fait appel à http.js
+var url = require('url'); // Fait appel à url.js
+Où sont ces fichiers .js ? Je ne les vois pas !
+Ils sont quelque part bien au chaud sur votre disque, leur position ne nous intéresse pas. ;)
+Etant donné qu'ils font partie du noyau de Node.js, ils sont tout le temps disponibles.
+
+Les modules sont donc de simples fichiers .js. Si nous voulons créer un module,
+disons le module "test", nous devons créer un fichier test.js dans le même dossier
+et y faire appel comme ceci :
+
+      // var test = require('./test'); // Fait appel à test.js (même dossier)
+Il ne faut pas mettre l'extension .js dans lerequire()!
+C'est un chemin relatif. Si le module se trouve dans le dossier parent,
+nous pouvons l'inclure comme ceci :
+
+      // var test = require('../test'); // Fait appel à test.js (dossier parent)
+
+Et si je ne veux pas mettre de chemin relatif ?
+Je ne peux pas juste fairerequire('test')?
+Si vous pouvez ! Il faut mettre votre fichier test.js dans un sous-dossier
+appelé "node_modules". C'est une convention de Node.js :
+
+      // var test = require('test'); // Fait appel à test.js (sous-dossier node_modules)
+
+
+Notez que si le dossier node_modules n'existe pas, Node.js ira
+chercher un dossier qui a le même nom plus haut dans l'arborescence.
+Ainsi, si votre projet se trouve
+dans le dossier : /home/mateo21/dev/nodejs/projet,
+il ira chercher un dossier nommé :
+            /home/mateo21/dev/nodejs/projet/node_modules,
+ et si ce dossier n'existe pas il ira le chercher dans...
+      ... /home/mateo21/dev/nodejs/node_modules, et si ce dossier n'existe pas il ira le chercher dans...
+      ... /home/mateo21/dev/node_modules, et ainsi de suite !
+A quoi ressemble le code des fichiers .js des modules ?
+C'est du code JavaScript tout ce qu'il y a de plus classique.
+Vous y créez des fonctions.
+Une seule particularité : vous devez "exporter" les fonctions
+que vous voulez que d'autres personnes puissent réutiliser.
+
+Testons ça ! On va créer un module tout bête qui sait dire
+"Bonjour !" et "Bye bye !". Créez un fichier monmodule.js
+avec le code suivant :
+
+                  var direBonjour = function() {
+                      console.log('Bonjour !');
+                  }
+
+                  var direByeBye = function() {
+                      console.log('Bye bye !');
+                  }
+
+              // exports.direBonjour = direBonjour;
+              // exports.direByeBye = direByeBye;
+
+Le début du fichier ne contient rien de nouveau. Nous créons des fonctions
+que nous plaçons dans des variables. D'où levar direBonjour = function()...
+
+Ensuite, et c'est la nouveauté, nous exportons ces fonctions pour qu'elles
+soient utilisables de l'extérieur :exports.direBonjour = direBonjour;.
+Notez d'ailleurs qu'on aurait aussi pu faire directement :
+
+              // exports.direBonjour = function() { ... };
+
+
+Toutes les fonctions que vous n'exportez pas dans votre fichier de module
+resteront privées. Elles ne pourront pas être appelées de l'extérieur.
+En revanche, elles pourront tout à fait être utilisées par d'autres
+fonctions de votre module.
+Maintenant, dans le fichier principal de votre application (ex : app.js),
+vous pouvez faire appel à ces fonctions issues du module !
+
+              // var monmodule = require('./monmodule');
+
+                  monmodule.direBonjour();
+                    monmodule.direByeBye();
+
+require()renvoie en fait un objet qui contient les fonctions que vous avez
+exportées dans votre module. Nous stockons cet objet dans une variable du
+même nommonmodule(mais on aurait pu lui donner n'importe quel autre nom).
+
+
+Créez un fichierpackage.jsondans le même dossier que votre application.
+Commençons simplement avec ce code :
+
+                              {
+                              "name": "mon-app",
+                              "version": "0.1.0",
+                              "dependencies": {
+                              "markdown": "~0.4"
+                              }
+                              }
+
+Ce fichier JSON contient 3 paires de clé-valeur :
+
+  - name : c'est le nom de votre application. Restez simple, évitez les espaces et accents.
+
+  - version : c'est le numéro de version de votre application. Il est composé d'un numéro de version majeure,
+              de version mineure et de patch.
+
+  - dependencies : c'est un tableau listant les noms des modules dont a besoin votre application pour fonctionner
+              ainsi que les versions compatibles.
+
+Infos :
+    Le fichier peut-être beaucoup plus complet que ça, je ne vous ai montré ici que les valeurs essentielles.
+    Pour tout connaître sur le fonctionnement de ce fichier package.json, je vous recommande cette cheat sheet :
+    package.json.nodejitsu.com
+
+LE FONCTIONNEMENT DES NUMÉROS DE VERSION
+Pour bien gérer les dépendances et savoir mettre à jour le numéro version de son application, il faut savoir comment
+fonctionnent les numéros de version avec Node.js.
+Il y a pour chaque application :
+        - Un numéro de version majeur. En général on commence à 0 tant que l'application
+          n'est pas considérée comme mature. Ce numéro change très rarement, uniquement quand
+          l'application a subi des changements très profonds.
+
+        - Un numéro de version mineur. Ce numéro est changé à chaque fois que l'application est un peu modifiée.
+
+        - Un numéro de patch. Ce numéro est changé à chaque petite correction de bug ou de faille.
+          Les fonctionnalités de l'application restent les mêmes entre les patchs, il s'agit surtout d'optimisations
+          et de corrections indispensable.

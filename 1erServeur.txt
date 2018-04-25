@@ -114,8 +114,61 @@ qu'on ne fait aucun test, notre application renvoie toujours la même chose.
 
 Nous allons découvrir comment récupérer :
     - Le nom de la page demandée(/mapage,/page.html,/dossier/autrepage...)
-    - Les paramètres qui circulent dans l'URL 
+    - Les paramètres qui circulent dans l'URL
     (ex: http://localhost:8080/mapage? nom=dupont&prenom=robert).
+
+QUELLE EST LA PAGE DEMANDÉE PAR LE VISITEUR ?
+POUR RÉCUPÉRER LA PAGE DEMANDÉE PAR LE VISITEUR, ON VA FAIRE APPLE À
+UN NOUVEAU MODULE DE NODE APPELÉ "URL".
+ON DEMANDE SON INCLUSION AVEC :
+var url = require("url");
+ENSUITE, IL NOUS SUFFIT DE "PARSER" LA REQUÊTE DU VISITEUR COMME CECI
+POUR OBTENIR LE NOM DE LA PAGE DEMANDÉE :
+url.parse(req.url).pathname;
+Voir serveur3.js pour tester cela.
+
+Serveur4.js  :  RENVOIE UN MESSAGE DIFFÉRENT EN FONCTION DE LA PAGE DEMANDÉE.
+AVEC UN if : voir serveur4.js
+
+QUELS SONT LES PARAMÈTRES ?
+Les paramètres sont contenus dans la chaîne ?prenom=Robert&nom=Dupont.
+Pour récupérer cette chaîne, il suffit de faire appel à :
+url.parse(req.url).query
+Le problème, c'est qu'on vous renvoie toute la chaîne sans découper
+au préalable les différents paramètres.
+Heureusement, il existe un module Node.js qui s'en charge pour nous :
+querystring !
+
+Incluez ce module :
+var querystring = require('querystring');
+Nous pouvons ensuite faire :
+var params = querystring.parse(url.parse(req.url).query);
+
+Vous disposez alors d'un tableau de paramètres "params". Pour récupérer le paramètre
+"prenom" par exemple, il suffira d'écrire : params['prenom'].
+
+Amusons-nous avec un code complet qui affiche votre prenom et votre nom (pourvu qu ceux-ci soient féfinis !)
+
+Essayez d'aller sur http://localhost:8080?prenom=Robert&nom=Dupont pour voir, puis
+changez le prénom et le nom pour les remplacer par les vôtres !
+
+Deux petites précisions par rapport à ce code : 'prenom' in params me permet en JavaScript de tester
+si le tableau contient bien une entrée 'prenom'. S'il manque un paramètre, je peux alors afficher`
+un message d'erreur (sinon mon script aurait affichéundefinedà la place).
+Par ailleurs, vous constaterez que je ne vérifie pas la page qui est appelée. Ce code fonctionne
+aussi bien que l'on soit sur http://localhost:8080 ou sur http://localhost:8080/pageimaginaire.
+Il faudrait combiner ce code et le précédent pour gérer à la fois la page ET les paramètres.
+
+Schéma résumé
+
+Allez, résumons ce qu'on vient d'apprendre dans un seul et unique schéma avant de terminer !
+
+
+Récupérer l'URL et les paramètres avec Node.js
+http:localhost:8080
+/chemin/vers/la/page? url.parse(req.url).pathname
+param1=valeur&param2=valeur url.parse(req.url).query
+
 
 
 

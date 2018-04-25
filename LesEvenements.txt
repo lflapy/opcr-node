@@ -1,0 +1,236 @@
+Les évènements
+Node.js est un environnement de développement JavaScript basé sur les
+évènements.
+Je vous ai montré dans le premier chapitre ce que ça signifie : il y a
+un seul thread mais aucune opération n'est bloquante. Ainsi, les opérations
+un peu longues (chargement d'un fichier, téléchargement web)sont lancées en
+tâche de fond et une fonction de callback est appelée quand l'opération est
+terminée.
+
+Les évènements sont à la base de Node.js. C'est ce qui fait que Node.js est
+puissant mais aussi un peu plus difficile à appréhender, puisque ça nous impose
+de coder avec beaucoup de fonctions de callback.
+
+Je vous propose de rentrer ici dans les détails du fonctionnement des évènements Node.js.
+Nous verrons en particulier comment on peut écouter et créer des évènements.
+Tout développeur Node.js qui se respecte doit savoir faire ça, alors au boulot !
+
+Surprise ! Vous savez déjà écouter des évènements en JavaScript. Allons, vous n'allez pas
+me faire croire que vous n'avez jamais utilisé une bibliothèque comme jQuery pour écouter
+des évènements sur votre page web !
+
+Par exemple :
+$("canvas").on("mouseleave", function() { .... });
+Avec ce genre d'instruction, vous demandez à exécuter une fonction de callback quand la souris sort
+d'un élément <canvas> de la page. On dit que vous attachez l'évènement
+au DOM de la page.
+Avec Node.js, le principe est exactement le même. Un très très grand nombre d'objets Node.
+js émettent des évènements. Leur particularité ? lls héritent tous d'un objet EventEmitter
+fourni par Node.
+Prenons par exemple le module "http" que nous avons utilisé pour créer notre serveur web.
+Il comprend un objet Server qui émet des évènements d'après la doc :
+
+Table of Contents
+HTTP
+  http.STATUS_CODE
+  http.createServer([requestListener])
+  http.createClient([port], [host])
+  Class:http.server
+    Event: 'request'
+    Event: 'connection'
+    Event: 'close'
+    Event: 'checkContinue'
+    Event: 'connect'
+    Event: 'upgrade'
+    Event: 'clientError'
+LA DOC DE NODE.JS INDIQUE LES ÉVÈNEMENTS QUE LES OBJETS ÉMETTENT.
+
+Comment écouter ces évènements ? Supposons par exemple qu'on souhaite écouter
+l'évènement "close" qui survient quand le serveur est arrêté.
+Il suffit de faire appel à la méthode on() et d'indiquer :
+  - Le nom de l'évènement que vous écoutez (ici "close")
+  - La fonction de callback à appeler quand l'évènement survient
+Exemple :
+server.on('close', function() {
+  //faire quelque chose quand le serveur est arrêté.
+})
+Je vous propose un exemple concret et complet. On va lancer un serveur
+et l'arrêter juste après.
+On écoute l'évènement close qui survient lorsque le serveur est arrêté.
+On affiche un message dans la console quand le serveur s'apprête à s'arrêter.
+voir serveur6.js
+
+Bref, les évènements sont partout, vous ne pouvez pas y échapper ! :D
+Certains sont simplement un peu "masqués" comme c'est le cas ici, mais il est
+important de savoir ce qui se passe derrière.
+                serveur6.js
+Vous pouvez écouter plusieurs fois un même évènement. Faites deux fois appel
+à la fonction on() pour le même évènement : les deux fonctions de callback seront appelées quand l'évènement aura lieu.
+                serveur6.js
+
+EMETTRE DES ÉVÈNEMENTS :
+Si vous voulez émettre des évenements vous aussi, c'est très simple :
+incluez le module EventEmitter et créez un objet sur EventEmitter.
+
+var EventEmitter = require('events').EventEmitter;
+
+var jeu = new EventEmitter();
+
+Ensuite, pour émettre un évènement dans votre code, il suffit de faire
+appel à 'emit()' depuis votre objet basé sur EventEmitter.
+Indiquez :
+    - Le nom de l'évènement que vous voulez générer(ex: "gameover").
+        à vous de choisir.
+    - Un ou plusieurs éventuels paramètres à passer(facultatif).
+
+Ici, je génère un évènement "gameover" et j'envoie un message à celui
+qui réceptionnera l'évènement via un paramètre.
+jeu.emit('gameover', 'vous avez perdu !!!');
+Celui qui veut écouter l'évènement doit faire ensuite :
+jeu.on('gameover', function(message) { });
+Voici ci-dessous un code complet pour tester l'émission d'évènements :
+serveur7.js
+
+var EventEmitter = require('events').EventEmitter;
+
+var jeu = new EventEmitter();
+
+jeu.on('gameover', function(message){
+    console.log(message);
+});
+
+jeu.emit('gameover', 'Vous avez perdu !');
+
+serveur7.js
+
+Bon, j'admets, c'est un peu trop simple. Ce code se contente d'émettre un évènement.
+Dans la réalité, les évènements seront émis depuis des fonctions imbriquées dans
+d'autres fonctions, et c'est de là que Node.js tire toute sa richesse.
+
+En tout cas comme vous le voyez, le principe n'est
+pas franchement compliqué à comprendre ! :)
+
+N'oubliez pas que vous pouvez envoyer autant de paramètres que nécessaire
+à la fonction de callback. Emettez simplement plus de paramètres :
+
+jeu.emit('nouveaujoueur', 'Mario', 35); // envoie le nom d'un nouveau 
+                                        // joueur qui arrive et son âge.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hq

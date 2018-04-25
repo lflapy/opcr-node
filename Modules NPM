@@ -1,0 +1,49 @@
+
+UTILISER NPM POUR INSTALLER DES MODULES :
+
+Je vous ai parlé en introduction de NPM (le Node Package Manager).
+Je vous ai dit que c'était un moyen (formidable) d'installer
+de nouveaux modules développés par la communauté.
+
+Imaginez que NPM est un peu l'équivalent d'apt-get sous Linux
+pour installer des programmes. Une simple commande et le module
+est téléchargé et installé !
+En plus, NPM gère les dépendances. Cela signifie que, si un module
+a besoin d'un autre module pour fonctionner, NPM ira le télécharger
+automatiquement !
+
+NPM possède un site web : http://npmjs.org !
+
+NPM est très actif, il y a plusieurs dizaines de milliers de MODULES
+disponibles, et on compte plusieurs millions de téléchargements par
+semaine ! Si vous n'y trouvez pas votre bonheur, c'est con.....
+
+Comme le dit NPM, il est aussi simple d'installer de nouveau MODULES
+que de publier ses propres modules. C'est en bonne partie ce qui
+explique le grand succès de Node.js.
+
+COMMENT M'Y RETROUVER DANS TOUT ÇA ? COMMENT TROUVER UN MODULE ?
+
+C'est assez facile en fait. Je vais vous montrer plusieurs moyens de
+trouver des modules.
+
+Trouver un module :
+Si vous savez ce que vous rechercher, le site NPM vous permet de faire
+une recherche. Mais NPM, c'est avant tout une commande !!
+Vous pouvez faire une recherche dans la console, comme ceci :
+
+            npm search postgresql
+ce qui aura pour effet de rechercher tous les modules en rapport
+avec la base de données Postgresql par exemple.
+
+Installer un module :
+
+            npm install nomdumodule
+le module sera installé localement spécialement pour votre projet.
+Si vous avez un autre projet, il faudra relancer la commande d'install
+afin de l'installer a nouveau sur votre projet.
+Cela vous permet d'utiliser des versions différentes d'un même module
+en fonction de vos projets.
+
+Allez faisons un test. On va installer le module markdown qui permet de
+convertir du code markdown en HTML.
